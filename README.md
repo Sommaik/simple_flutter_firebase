@@ -1,3 +1,6 @@
+#Git Url
+https://github.com/Sommaik/simple_flutter_firebase
+
 # simple
 
 A new Flutter project.

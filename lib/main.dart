@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:simple/example_form_page.dart';
+import 'package:simple/list_view_post_page.dart';
 import 'package:simple/login.dart';
 import 'package:simple/register.dart';
 import 'simpletab.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,7 +27,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
         '/exampleform': (context) => ExampleFormPage(),
-        // '/postview': (context) =>
+        '/listviewpost': (context) => ListViewPostPage(),
       },
     );
   }
@@ -38,6 +42,17 @@ class MyHomePage extends StatefulWidget {
 
 class MyHome extends State<MyHomePage> {
   int count = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    readCounter().then((value) {
+      setState(() {
+        this.count = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,23 +65,15 @@ class MyHome extends State<MyHomePage> {
             Center(
               child: buildCountText(),
             ),
-            buildTabButton(context),
-            buildLoginButton(context),
-            buildExampleFormButton(context)
+            buildMenuButton(context, label: 'Tab', path: '/tab'),
+            buildMenuButton(context, label: 'Login', path: '/login'),
+            buildMenuButton(context,
+                label: 'Example Form', path: '/exampleform'),
+            buildMenuButton(context, label: 'List Post', path: '/listviewpost'),
           ],
         ),
       ),
       floatingActionButton: buildAddButton(),
-    );
-  }
-
-  RaisedButton buildExampleFormButton(BuildContext context) {
-    return RaisedButton(
-      child: Text("Example Form"),
-      onPressed: () {
-        print("Go to example form");
-        Navigator.pushNamed(context, '/exampleform');
-      },
     );
   }
 
@@ -76,6 +83,7 @@ class MyHome extends State<MyHomePage> {
       onPressed: () {
         setState(() {
           this.count++;
+          writeCounter(this.count);
         });
 
         print(this.count);
@@ -83,22 +91,16 @@ class MyHome extends State<MyHomePage> {
     );
   }
 
-  RaisedButton buildLoginButton(BuildContext context) {
+  RaisedButton buildMenuButton(
+    BuildContext context, {
+    String label,
+    String path,
+  }) {
     return RaisedButton(
-      child: Text('Login Page'),
+      child: Text(label),
       onPressed: () {
-        print('go to login page');
-        Navigator.pushNamed(context, '/login');
-      },
-    );
-  }
-
-  RaisedButton buildTabButton(BuildContext context) {
-    return RaisedButton(
-      child: Text('Test'),
-      onPressed: () {
-        print('test');
-        Navigator.pushNamed(context, '/tab');
+        print('goto $label with $path');
+        Navigator.pushNamed(context, path);
       },
     );
   }
@@ -109,24 +111,21 @@ class MyHome extends State<MyHomePage> {
       style: TextStyle(fontSize: 20),
     );
   }
-}
 
-// class MyHomePage extends StatelessWidget {
-//   int count = 0;
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text("My Home Page"),
-//       ),
-//       body: Text("$count"),
-//       floatingActionButton: FloatingActionButton(
-//         child: Icon(Icons.add),
-//         onPressed: () {
-//           this.count = this.count + 1;
-//           print(this.count);
-//         },
-//       ),
-//     );
-//   }
-// }
+  Future<File> writeCounter(int counter) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final _file = File('${directory.path}/counter.txt');
+    return _file.writeAsString('$counter');
+  }
+
+  Future<int> readCounter() async {
+    final directory = await getApplicationDocumentsDirectory();
+    final _file = File('${directory.path}/counter.txt');
+    try {
+      String content = await _file.readAsString();
+      return int.parse(content);
+    } catch (e) {
+      return 0;
+    }
+  }
+}

@@ -4,7 +4,10 @@ import 'package:simple/model/post.dart';
 class ListViewPost extends StatelessWidget {
   final List<Post> posts;
 
-  ListViewPost({Key key, this.posts}) : super(key: key);
+  ListViewPost({
+    Key key,
+    @required this.posts,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

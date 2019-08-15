@@ -9,6 +9,15 @@ import 'package:http/http.dart' as http;
 class ListViewPostPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Post List"),
+      ),
+      body: buildBody(),
+    );
+  }
+
+  FutureBuilder<List<Post>> buildBody() {
     return FutureBuilder(
       future: fetchPost(http.Client()),
       builder: (BuildContext context, snapshot) {
