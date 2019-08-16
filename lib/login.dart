@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,6 +10,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formstate = GlobalKey<FormState>();
   String email;
   String password;
+  final auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +44,37 @@ class _LoginPageState extends State<LoginPage> {
       child: Text("Login"),
       onPressed: () {
         if (this._formstate.currentState.validate()) {
-          print('valid form');
           this._formstate.currentState.save();
+          this
+              .auth
+              .signInWithEmailAndPassword(
+                  email: this.email, password: this.password)
+              .then((user) {
+            if (user.isEmailVerified) {
+              Scaffold.of(this._formstate.currentContext)
+                  .showSnackBar(SnackBar(content: Text("Login passs")));
+            } else {
+              Scaffold.of(this._formstate.currentContext).showSnackBar(
+                  SnackBar(content: Text("Please verified your email")));
+            }
+          }).catchError((reason) {
+            Scaffold.of(this._formstate.currentContext)
+                .showSnackBar(SnackBar(content: Text("Login fail")));
+          });
+          // try {
+          //   FirebaseUser user = await this.auth.signInWithEmailAndPassword(
+          //       email: this.email, password: this.password);
+          //   if (user.isEmailVerified) {
+          //     Scaffold.of(this._formstate.currentContext)
+          //         .showSnackBar(SnackBar(content: Text("Login passs")));
+          //   } else {
+          //     Scaffold.of(this._formstate.currentContext).showSnackBar(
+          //         SnackBar(content: Text("Please verified your email")));
+          //   }
+          // } catch (e) {
+          //   Scaffold.of(this._formstate.currentContext)
+          //       .showSnackBar(SnackBar(content: Text("Login fail")));
+          // }
         } else {
           print('invalid form');
         }
