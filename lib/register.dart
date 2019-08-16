@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -9,6 +10,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final _formstate = GlobalKey<FormState>();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+
+  final auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +32,17 @@ class _RegisterPageState extends State<RegisterPage> {
   RaisedButton buildRegisterButton() {
     return RaisedButton(
       child: Text("Register"),
-      onPressed: () {
+      onPressed: () async {
         print('Register new acc');
         if (this._formstate.currentState.validate()) {
           // this._formstate.currentState.save();
           print(this.email.text);
           print(this.password.text);
+          FirebaseUser user = await auth.createUserWithEmailAndPassword(
+            email: this.email.text,
+            password: this.password.text,
+          );
+          user.sendEmailVerification();
         }
       },
     );
