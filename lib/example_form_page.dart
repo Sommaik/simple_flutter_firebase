@@ -1,9 +1,13 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:simple/bloc/counter/counter_bloc.dart';
+import 'package:simple/bloc/counter/counter_event.dart';
 
 class ExampleFormPage extends StatefulWidget {
   @override
@@ -24,6 +28,15 @@ class _ExampleFormPageState extends State<ExampleFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    CounterBloc _bloc = BlocProvider.of<CounterBloc>(context);
+
+    return BlocBuilder(
+      bloc: _bloc,
+      builder: (context, counter) => buildScaffold(_bloc, counter),
+    );
+  }
+
+  Scaffold buildScaffold(CounterBloc bloc, int counter) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Example Form"),
@@ -32,6 +45,13 @@ class _ExampleFormPageState extends State<ExampleFormPage> {
         key: _form,
         child: ListView(
           children: <Widget>[
+            Text('$counter'),
+            RaisedButton(
+              child: Text("decement"),
+              onPressed: () {
+                bloc.dispatch(CounterEvent.decement);
+              },
+            ),
             buildDateField(),
             Container(
               child: _image == null
