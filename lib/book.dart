@@ -12,12 +12,7 @@ class BookPage extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: Text("Books"),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () => print("add icon press"),
-              )
-            ],
+            actions: <Widget>[buildAddButton(context)],
           ),
           body: snapshot.hasData
               ? buildBookList(snapshot.data)
@@ -25,6 +20,16 @@ class BookPage extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 ),
         );
+      },
+    );
+  }
+
+  IconButton buildAddButton(context) {
+    return IconButton(
+      icon: Icon(Icons.add),
+      onPressed: () {
+        print("add icon press");
+        Navigator.pushNamed(context, '/addbook');
       },
     );
   }
