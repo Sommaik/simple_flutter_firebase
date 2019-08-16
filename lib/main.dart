@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:simple/add_book.dart';
 import 'package:simple/book.dart';
 import 'package:simple/example_form_page.dart';
+import 'package:simple/googlemap.dart';
 import 'package:simple/list_view_post_page.dart';
 import 'package:simple/login.dart';
 import 'package:simple/register.dart';
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
         '/exampleform': (context) => ExampleFormPage(),
         '/listviewpost': (context) => ListViewPostPage(),
         '/book': (context) => BookPage(),
-        '/addbook': (context) => AddBookPage()
+        '/addbook': (context) => AddBookPage(),
+        '/googlemap': (context) => GoogleMapPage(),
       },
     );
   }
@@ -75,6 +77,7 @@ class MyHome extends State<MyHomePage> {
                 label: 'Example Form', path: '/exampleform'),
             buildMenuButton(context, label: 'List Post', path: '/listviewpost'),
             buildMenuButton(context, label: 'List Book', path: '/book'),
+            buildMenuButton(context, label: 'Google Map', path: '/googlemap'),
           ],
         ),
       ),
